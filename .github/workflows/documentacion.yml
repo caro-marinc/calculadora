@@ -1,0 +1,39 @@
+name: compila-y-genera-pdf
+
+on:
+  push:
+  
+jobs:
+  compila-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.2.2
+      
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v3.4.2
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Dependencies install
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+  
+  crear-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: BaileyJM02/markdown-to-pdf@v1
+        with:
+          input_dir: docs
+          output_dir: pdfs
+          build_html: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: pdf
+    
+  
